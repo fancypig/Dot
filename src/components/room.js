@@ -116,6 +116,7 @@ export default class Room extends Component{
       left: "50%",
       transform: "translateX(-50%)",
       lineHeight: "50px",
+      fontFamily: "Catamaran"
     }
 
 // Loop over all existing users

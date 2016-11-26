@@ -14,6 +14,14 @@
     <!-- Latest compiled and minified CSS -->
     <style>
 
+      .join_meeting_session_button {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            margin: 0;
+            transform: translateX(-50%)!important;
+      }
+
       .modal_your_name {
         margin-top: 0px;
         text-align: center;
@@ -42,7 +50,7 @@
         border-color: transparent transparent transparent rgb(80, 80, 80);
         right: 45%;
         position: absolute;
-        margin-bottom: 5px;
+        bottom: -180px;
       }
 
       .prev_person {
@@ -53,11 +61,12 @@
         border-color: transparent rgb(80, 80, 80) transparent transparent;
         position: absolute;
         left: 45%;
-        margin-bottom: 5px;
+        bottom: -180px;
       }
 
       .user_name_container {
         border-radius: 50%;
+        margin: auto;
         width: 10vw;
         height: 10vw;
         color: white;

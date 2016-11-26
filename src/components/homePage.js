@@ -37,7 +37,7 @@ export default class HomePage extends Component{
           <input placeholder="Write here" className="full_width input" type = "text" value = {this.state.meetingCode} onChange = {(data)=>this.setState({meetingCode:data.target.value}, ()=>console.log(this.state.meetingCode))}/>
          </div>
        </div>
-       <Link to = {'join/' + this.state.meetingID} style = {join_meeting} className="hvr-grow" type="button" > Join the meeting </Link>
+       <Link to = {'join/' + this.state.meetingID} style = {join_meeting} className="hvr-grow join_meeting_session_button" type="button" > Join the meeting </Link>
      </Modal>
     )
   }
@@ -213,6 +213,7 @@ const modal_style = {
 }
 const main_content = {
   margin: '0',
+  minHeight: "500px",
   fontFamily: "Open Sans"
 }
 
