@@ -6,7 +6,6 @@ export default class User extends Component{
 	constructor(prop){
 	    super(prop)
 	    this.state = {
-
   	 	}
  	}
 
@@ -32,7 +31,8 @@ export default class User extends Component{
 	    			<h3 style={user_role} className="name">{this.props.name}</h3>
 	    		</div>
 	    		<p style={user_role} className="role">
-	    			Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+					My preparation:
+						{this.props.answer}
 	    		</p>
 	    	</div>
 	    );

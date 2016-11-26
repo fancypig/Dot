@@ -16,7 +16,7 @@ export default class Room extends Component{
     super()
     this.state = {
       currentTime: Date.now(),
-      meetingInfo:{},
+      meetingInfo:{participants:[{name:'dog',answer: 'delicious'}]},
       input: '',
     }
     this.inputChange = this.inputChange.bind(this)
@@ -45,7 +45,6 @@ export default class Room extends Component{
       }
     })
     .then((responseJson)=>{
-      console.log(responseJson[0])
       this.setState({meetingInfo: responseJson[0]})
     })
     .catch((error) => {
@@ -69,6 +68,14 @@ export default class Room extends Component{
     this.setState({input:input.target.value},()=>{
       socket.emit('textChange', { text: this.state.input });
     })
+  }
+  renderUser(){
+    return(
+      this.state.meetingInfo.participants.map((person, i) => (
+        <User key = {i} name = {person.name} answer = {person.answer}/>
+        )
+      )
+    )
   }
   render(){
 
@@ -115,12 +122,7 @@ export default class Room extends Component{
       <div style={main_container}>
         <h1 style={purpose} className="purpose"><strong>Purpose of Meeting:</strong> { this.state.meetingInfo.objective }</h1>
         <div style={users_container} className="user_container">
-          <User name="Tom" ref = "user"/>
-          <User name="Tim" ref = "user"/>
-          <User name="Superman" ref = "user"/>
-          <User name="Timmy" ref = "user"/>
-          <User name="Tammy" ref = "user"/>
-          <User name="Sophia" ref = "user"/>
+          {this.renderUser()}
         </div>
         <Timer ref = "timer"/>
         <textarea placeholder="This is where you take notes..." style={input} className=" input btn "type = "text" value = {this.state.input} onChange = {this.inputChange}></textarea>
