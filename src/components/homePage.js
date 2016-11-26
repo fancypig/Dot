@@ -27,7 +27,6 @@ export default class HomePage extends Component{
 
   }
   createMeeting(){
-    console.log(this.state.objective + ', ' + this.state.length + ', ' + this.state.preparation)
     var _this = this
     return fetch('/meeting/finalize', {
       method: 'POST',
@@ -49,7 +48,6 @@ export default class HomePage extends Component{
         return
       }
       else{
-        console.log('wtf')
         this.setState({show:false}, ()=> this.setState({showResult: true}))
         return response.json();
       }
