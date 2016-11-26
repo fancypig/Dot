@@ -125,8 +125,8 @@ export default class HomePage extends Component{
          <h3 className="your_session_id"> Your meeting access ID is : <strong>{this.state.meetingInfo._id}</strong></h3>
          <p> Share the meeting page with your teammates by entering their emails </p>
          <Link to = {'join/' + this.state.meetingInfo._id} style = {join_meeting} className="hvr-grow" type="button" > Join the meeting </Link>
-         <input className="btn pointer hvr-grow" type="button" onClick = {()=> this.setState({show:false})} value = "Share"/>
-         <input className="btn pointer hvr-grow" type="button" onClick = {()=> this.setState({show:false})} value = "Cancel"/>
+         <input className="btn pointer hvr-grow" type="button" onClick = {()=> this.setState({showResult:false})} value = "Share"/>
+         <input className="btn pointer hvr-grow" type="button" onClick = {()=> this.setState({showResult:false})} value = "Cancel"/>
        </div>
      </Modal>
     )
