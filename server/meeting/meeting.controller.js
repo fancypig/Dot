@@ -21,7 +21,7 @@ var self = module.exports = {
   },
   joinMeeting: function(req,res){
     Meeting.find({'_id':req.params.id}, function(err, meeting){
-      if(meeting.length < 1 || meeting == null){
+      if(!meeting || meeting.length < 1 || meeting == null){
         res.status(404).json('not found')
       }
       else{
@@ -31,7 +31,7 @@ var self = module.exports = {
   },
   joinRoom: function(req,res){
     Meeting.update({'_id':req.params.id}, {$push: {'participants':{'name': req.body.name, 'answer': req.body.answer}}}, function(err, meeting){
-      if(meeting.length < 1 || meeting == null){
+      if(!meeting || meeting.length < 1 || meeting == null){
         res.status(404).json('not found')
       }
       else{
