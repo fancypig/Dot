@@ -20,6 +20,7 @@ var self = module.exports = {
 
   },
   joinMeeting: function(req,res){
+    console.log(req.params)
     Meeting.find({'_id':req.params.id}, function(err, meeting){
       if(!meeting || meeting.length < 1 || meeting == null){
         res.status(404).json('not found')

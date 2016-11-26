@@ -20,6 +20,7 @@ export default class Join extends Component{
   }
   directToPage(){
     var _this = this
+    console.log(this.props.params)
     return fetch('/meeting/join/' + this.props.params.param, {
       method: 'POST',
       headers: {
