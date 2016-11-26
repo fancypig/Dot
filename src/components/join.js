@@ -48,6 +48,7 @@ export default class Join extends Component{
     });
   }
    componentWillMount() {
+     console.log('haha')
      this.directToPage()
    }
    joinRoom(){
