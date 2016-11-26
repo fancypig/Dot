@@ -255,7 +255,7 @@ const create_meeting = {
 
 const join_meeting = {
   border: "none",
-  background: "rgb(223, 244, 63)",
+  background: "rgb(244, 200, 66)",
   padding: "20px",
   margin: "15px",
   fontSize: "18px",
