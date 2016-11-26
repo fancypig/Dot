@@ -190,7 +190,6 @@ export default class HomePage extends Component{
             {this.renderModalResult()}
             <input style={create_meeting} className="create_meeting hvr-grow pointer" type="button" onClick = {()=> {this.setState({show:true})}} value = "Create Meeting"/>
             <Link to = "meeting_room" style={join_meeting} className="join-meeting hvr-grow pointer" type="button"> Join Meeting</Link>
-            <input type = "button" onClick = {this.joinMeeting} style={join_meeting} value = 'Join Meeting' className="join-meeting hvr-grow"/> 
           </div>
         </div>
       </div>
@@ -256,7 +255,7 @@ const create_meeting = {
 
 const join_meeting = {
   border: "none",
-  background: "rgb(223, 244, 63)",
+  background: "rgb(244, 200, 66)",
   padding: "20px",
   margin: "15px",
   fontSize: "18px",
