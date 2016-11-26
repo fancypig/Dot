@@ -37,11 +37,7 @@ export default class HomePage extends Component{
           <input placeholder="Write here" className="full_width input" type = "text" value = {this.state.meetingCode} onChange = {(data)=>this.setState({meetingCode:data.target.value}, ()=>console.log(this.state.meetingCode))}/>
          </div>
        </div>
-<<<<<<< HEAD
-       <Link to = {'join/' + this.state.meetingID} style = {join_meeting} className="hvr-grow join_meeting_session_button" type="button" > Join the meeting </Link>
-=======
-       <Link to = {'join/' + this.state.meetingCode} style = {join_meeting} className="hvr-grow" type="button" > Join the meeting </Link>
->>>>>>> 533c3105927729620f557da19297f18022301082
+       <Link to = {'join/' + this.state.meetingCode} style = {join_meeting} className="hvr-grow join_meeting_session_button" type="button" > Join the meeting </Link>
      </Modal>
     )
   }
