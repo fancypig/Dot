@@ -23,22 +23,21 @@ export default class HomePage extends Component{
     }
     this.inputChange = this.inputChange.bind(this)
     this.createMeeting = this.createMeeting.bind(this)
-    this.joinMeeting = this.joinMeeting.bind(this)
   }
 
   joinMeeting(){
     return(
       <Modal
-       isOpen={this.state.show}
+       isOpen={this.state.showJoin}
        onRequestClose={()=> this.setState({showJoin:false})}
        style = {modal_style}>
        <div className="modal_ask_container">
-         <h2>Enter your meeting Code</h2>
+         <h2>Enter your meeting ID</h2>
           <div className="modal_buttons_container">
           <input placeholder="Write here" className="full_width input" type = "text" value = {this.state.meetingCode} onChange = {(data)=>this.setState({meetingCode:data.target.value}, ()=>console.log(this.state.meetingCode))}/>
          </div>
        </div>
-       <input className="cancel_button hvr-grow pointer" type="button" onClick = {()=> this.setState({show:false})} value = "Join"/>
+       <Link to = {'join/' + this.state.meetingID} style = {join_meeting} className="hvr-grow" type="button" > Join the meeting </Link>
      </Modal>
     )
   }
@@ -188,8 +187,9 @@ export default class HomePage extends Component{
           <div style={button_container} className="button_container">
             {this.renderModal()}
             {this.renderModalResult()}
+            {this.joinMeeting()}
             <input style={create_meeting} className="create_meeting hvr-grow pointer" type="button" onClick = {()=> {this.setState({show:true})}} value = "Create Meeting"/>
-            <Link onClick={this.joinMeeting} style={join_meeting} className="join-meeting hvr-grow pointer" type="button"> Join Meeting</Link>
+            <Link onClick={() => this.setState({showJoin: true})} style={join_meeting} className="join-meeting hvr-grow pointer" type="button"> Join Meeting</Link>
           </div>
         </div>
       </div>
