@@ -165,12 +165,12 @@ export default class HomePage extends Component{
     return(
       <div style={main_content} className="main_content">
         <div style={front_page} className="front_page">
-          <h1 style={tagline} className="tagline">Perfect Meetings Everytime</h1>
+          <h1 style={tagline} className="type-animation enable-cursor">Perfect Meetings@ Everytime.</h1>
           <div style={button_container} className="button_container">
             {this.renderModal()}
             {this.renderModalResult()}
             <input style={create_meeting} className="create_meeting hvr-grow pointer" type="button" onClick = {()=> {this.setState({show:true})}} value = "Create Meeting"/>
-            <Link to = "meeting_room" style={join_meeting} className="join-meeting hvr-grow" type="button"> Join Meeting</Link>
+            <Link to = "meeting_room" style={join_meeting} className="join-meeting hvr-grow pointer" type="button"> Join Meeting</Link>
           </div>
         </div>
       </div>
@@ -198,7 +198,7 @@ const main_content = {
 }
 
 const front_page = {
-  background: 'rgba(255, 255, 255, 0.5)',
+  background: 'rgba(255, 255, 255, 0.65)',
   height: "100vh",
   position: "absolute",
   textAlign: "center",
@@ -208,8 +208,12 @@ const front_page = {
 };
 
 const tagline = {
-  marginTop: "120px",
-  marginBottom: "120px"
+  marginTop: "160px",
+  marginBottom: "50px",
+  fontFamily: "Catamaran",
+  fontWeight: "900",
+  fontSize: "3em",
+  color: "rgb(11, 8, 43)"
 }
 
 const button_container = {
@@ -219,25 +223,29 @@ const button_container = {
 const create_meeting = {
   border: "none",
   background: "rgb(40, 100, 180)",
-  padding: "10px",
+  padding: "20px",
   margin: "15px",
-  fontSize: "14px",
+  fontSize: "18px",
   boxSizing: "content-box",
   width: "150px",
   color: "white",
-  lineHeight: "20px"
+  lineHeight: "20px",
+  paddingLeft: "30px",
+  paddingRight: "30px"
 }
 
 const join_meeting = {
   border: "none",
-  background: "rgb(80, 230, 150)",
-  padding: "10px",
+  background: "rgb(223, 244, 63)",
+  padding: "20px",
   margin: "15px",
-  fontSize: "14px",
+  fontSize: "18px",
   textDecoration: "none",
   boxSizing: "content-box",
   width: "150px",
   display: "inline-block",
-  color: "white",
-  lineHeight: "20px"
+  color: "black",
+  lineHeight: "20px",
+  paddingLeft: "30px",
+  paddingRight: "30px"
 }
