@@ -74,6 +74,7 @@ export default class Join extends Component{
        }
      })
      .then((responseJson)=>{
+       this.props.history.push('/meeting_room/'+this.state.meetingInfo._id);
        console.log(responseJson)
      })
      .catch((error) => {
