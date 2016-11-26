@@ -198,8 +198,8 @@ export default class HomePage extends Component{
 }
 const modal_style = {
   content:{
-    height: '80%',
-    width: '80%',
+    height: '60%',
+    width: '68%',
     position: "absolute",
     top: "50%",
     left: "50%",
