@@ -122,7 +122,7 @@ export default class HomePage extends Component{
        style = {modal_style}>
        <div className="modal_join_success">
          <h4> Congrats, you have succesfully created a meeting!</h4>
-         <h3> Your meeting access ID is : <strong>{this.state.meetingInfo._id}</strong></h3>
+         <h3 className="your_session_id"> Your meeting access ID is : <strong>{this.state.meetingInfo._id}</strong></h3>
          <p> Share the meeting page with your teammates by entering their emails </p>
          <Link to = {'join/' + this.state.meetingInfo._id} style = {join_meeting} className="hvr-grow" type="button" > Join the meeting </Link>
          <input className="btn pointer hvr-grow" type="button" onClick = {()=> this.setState({show:false})} value = "Share"/>
