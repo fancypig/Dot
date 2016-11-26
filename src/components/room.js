@@ -16,10 +16,41 @@ export default class Room extends Component{
     super()
     this.state = {
       currentTime: Date.now(),
+      meetingInfo:{},
       input: '',
     }
     this.inputChange = this.inputChange.bind(this)
     this.tick = this.tick.bind(this);
+  }
+  fetch(){
+    console.log(this.props.params.param)
+    var _this = this
+    return fetch('/meeting/join/' + this.props.params.param, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        purpose: 'room',
+      })
+    })
+    .then((response) => {
+      if (response.status != 200){
+        console.log('errors')
+        return
+      }
+      else{
+        return response.json();
+      }
+    })
+    .then((responseJson)=>{
+      console.log(responseJson[0])
+      this.setState({meetingInfo: responseJson[0]})
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
   tick() {
      this.setState({
@@ -27,6 +58,7 @@ export default class Room extends Component{
      });
    }
    componentDidMount() {
+     this.fetch()
      socket.on('textChange', (data)=>{
        this.setState({input:data.text.text})
      })
@@ -68,13 +100,21 @@ export default class Room extends Component{
       display: "block",
       textAlign: "center"
     }
-
+    const purpose = {
+      color: "black",
+      margin: "0 auto",
+      position: "absolute",
+      top: "50px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      lineHeight: "50px",
+    }
 
 // Loop over all existing users
     return(
-      <div style={main_container}> 
-        <Purpose ref = "purpose"/>
-        <div style={users_container} className="user_container"> 
+      <div style={main_container}>
+        <h1 style={purpose} className="purpose"><strong>Purpose of Meeting:</strong> { this.state.meetingInfo.objective }</h1>
+        <div style={users_container} className="user_container">
           <User name="Tom" ref = "user"/>
           <User name="Tim" ref = "user"/>
           <User name="Superman" ref = "user"/>
