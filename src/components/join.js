@@ -84,7 +84,6 @@ export default class Join extends Component{
      return(
        <Modal
         isOpen={this.state.show}
-        onRequestClose={()=> this.setState({show:false})}
         style = {modal_style}>
         <h2>What is your name</h2>
         <input type="text" defaultValue = '' onChange = {(text)=>this.setState({name: text.target.value})}/>
@@ -98,7 +97,6 @@ export default class Join extends Component{
      return(
        <Modal
         isOpen={this.state.showPrep}
-        onRequestClose={()=> this.setState({showPrep:false})}
         style = {modal_style}>
         <h2>{this.state.meetingInfo.preparation}</h2>
         <input type="text" defaultValue = ''  onChange = {(text)=>{
@@ -112,7 +110,6 @@ export default class Join extends Component{
   render(){
     return(
       <div>
-        <h2> Welcome to join the meeting </h2>
         {this.renderModal()}
         {this.renderPrepModal()}
       </div>
