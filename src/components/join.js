@@ -86,9 +86,9 @@ export default class Join extends Component{
        <Modal
         isOpen={this.state.show}
         style = {modal_style}>
-        <h2>What is your name</h2>
-        <input type="text" defaultValue = '' onChange = {(text)=>this.setState({name: text.target.value})}/>
-        <input type = "button" value = "Next" onClick = {()=>{
+        <h2 className="modal_your_name">What is your name</h2>
+        <input className="input" type="text" defaultValue = '' onChange = {(text)=>this.setState({name: text.target.value})}/>
+        <input className="btn" type = "button" value = "Next" onClick = {()=>{
           this.setState({show: false}, ()=>{this.setState({showPrep: true})})
         }}/>
       </Modal>
@@ -99,10 +99,10 @@ export default class Join extends Component{
        <Modal
         isOpen={this.state.showPrep}
         style = {modal_style}>
-        <h2>{this.state.meetingInfo.preparation}</h2>
-        <input type="text" defaultValue = ''  onChange = {(text)=>{
+        <h2 className="modal_your_name">{this.state.meetingInfo.preparation}</h2>
+        <input className="input" type="text" defaultValue = ''  onChange = {(text)=>{
           this.setState({answer: text.target.value})}}/>
-        <input type = "button" value = "Enter" onClick = {()=>{
+        <input className="btn" type = "button" value = "Enter" onClick = {()=>{
            this.joinRoom()
          }}/>
       </Modal>
@@ -126,6 +126,7 @@ const modal_style = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     background: "rgb(40, 100, 180)",
