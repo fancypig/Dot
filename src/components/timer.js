@@ -31,7 +31,7 @@ export default class Timer extends Component{
  	}
 
  	render() {
- 			var spanPercent = (100*this.state.meetingTimeLeft/90) + '%';
+ 			var spanPercent = 100-(100*this.state.meetingTimeLeft/90) + '%';
  			var timer_container = {
  				paddingLeft: "20px"
  			}
@@ -40,10 +40,11 @@ export default class Timer extends Component{
 		 		position: "fixed",
 		 		top: "0",
 		 		left: "5px",
-		 		background: "rgb(70, 70, 70)",
-		 		width: "10px",
-		 		height: spanPercent,
-		 		maxHeight: "100%"
+		 		background: "orange",
+		 		width: "30px",
+		 		height: "100%",
+		 		maxHeight: "100%",
+		 		transform: "translateY(" + spanPercent + ")"
 		 	}
 
 		 	const overtime = {
@@ -57,13 +58,13 @@ export default class Timer extends Component{
 		 	const time_left = {
 		 		position: "fixed",
 		 		top: "-20px",
-		 		left: "20px"
+		 		left: "50px"
 		 	}
 
 	    return (
 	    	<div style={timer_container} className="timer_container">
       		<h5 style={time_left} >Time left for meeting: {this.state.meetingTimeLeft}s</h5>
-      		<input style={overtime} className="overtime pointer btn input hvr-grow" type="button" onClick = {this.delay} value = "Overtime"/>
+      		<input style={overtime} className="overtime pointer btn input hvr-grow" type="button" onClick = {this.delay} value = "+2 minutes"/>
       		<div style={timer} className="timer">
 	      	</div>
 	      </div>

@@ -200,7 +200,7 @@ const main_content = {
 }
 
 const front_page = {
-  background: 'white',
+  background: 'rgba(255, 255, 255, 0.5)',
   height: "100vh",
   position: "absolute",
   textAlign: "center",

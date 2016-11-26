@@ -92,7 +92,8 @@ export default class Room extends Component{
     }
 
     const main_container = {
-      marginTop: "100px"
+      paddingTop: "100px",
+      background: "rgba(255, 255, 255, 0.9)"
     }
 
     const users_container = {
