@@ -64,7 +64,7 @@ export default class Timer extends Component{
 	    return (
 	    	<div style={timer_container} className="timer_container">
       		<h5 style={time_left} >Time left for meeting: {this.state.meetingTimeLeft}s</h5>
-      		<input style={overtime} className="overtime pointer btn input hvr-grow" type="button" onClick = {this.delay} value = "+2 minutes"/>
+      		<input style={overtime} className="overtime pointer btn input hvr-grow" type="button" onClick = {this.delay} value = "Next Steps?"/>
       		<div style={timer} className="timer">
 	      	</div>
 	      </div>
