@@ -16,8 +16,9 @@ export default class User extends Component{
 
 	}
 	inputChange(input){
+		this.props.individualInputChange(input.target.value, this.props.name)
     this.setState({individualInput:input.target.value},()=>{
-      socket.emit('individualChange', { name: this.props.name, text: this.state.individualInput });
+    //   socket.emit('individualChange', { name: this.props.name, text: this.state.individualInput });
     })
   }
  	render() {
