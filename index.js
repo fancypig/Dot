@@ -11,6 +11,13 @@ var config = require('./config/mongoDB')
 var server = require('http').Server(app)
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser')
+
+var meetings = [{
+  id: 0,
+  timeLeft: 0,
+  status: 'Start'
+}]
+
 app.use(bodyParser.json());
 
 // require('./config/passport')
@@ -28,11 +35,36 @@ io.on('connection', function (socket) {
   socket.on('textChange', function (data) {
     io.emit('textChange', {text: data})
   });
+  socket.on('getInfo', function (data) {
+    var exist = false
+    var infoGet = {}
+    for (var i = 0; i< meetings.length; i++){
+      if (meetings[i].id == data.meetingData._id)
+        exist = true
+        infoGet = meetings[i]
+    }
+    if (!exist){
+      infoGet = {
+        id: data.meetingData._id,
+        meetingTimeLeft: data.meetingData.length,
+        status: 'Start',
+      }
+      meetings.push(infoGet)
+    }
+    io.emit('getInfo',{infoGet: infoGet})
+  });
   socket.on('individualChange', function (data) {
     io.emit('individualChange', {text: data.text, name: data.name})
   });
-  socket.on('changeMettingStatus', function (data) {
-    io.emit('changeMettingStatus', {status: data.status})
+  socket.on('changeMeetingStatus', function (data) {
+    returnValue = {}
+    for (var i = 0; i< meetings.length; i++){
+      if (meetings[i].id == data.id){
+        meetings[i].status = data.status
+        returnValue = meetings[i]
+      }
+    }
+    io.emit('changeMeetingStatus', {meetingStatus: returnValue})
   });
   socket.on('detectTime', function (data) {
     io.emit('individualChange', {time: data.time})

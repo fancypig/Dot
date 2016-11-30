@@ -2,7 +2,6 @@ var Meeting = require('./meeting.model');
 var bodyParser = require('body-parser');
 var self = module.exports = {
   finalizeMeeting: function(req,res){
-    console.log(req.body)
     var newMeeting = {
       objective: req.body.objective,
       participants: [],
@@ -36,7 +35,6 @@ var self = module.exports = {
         res.status(404).json('not found')
       }
       else{
-        console.log(meeting)
         res.status(200).json(meeting)
       }
     })

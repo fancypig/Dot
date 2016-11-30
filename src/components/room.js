@@ -19,6 +19,7 @@ export default class Room extends Component{
       meetingInfo:{participants:[{name:'dog',answer: 'delicious'}]},
       input: '',
       buttonText: 'Start',
+      meetingStatus: {id:0, length:0, status:'Start'},
     }
     this.inputChange = this.inputChange.bind(this)
     this.tick = this.tick.bind(this);
@@ -46,8 +47,8 @@ export default class Room extends Component{
     })
     .then((responseJson)=>{
       this.setState({meetingInfo: responseJson[0]}, ()=> {
+        socket.emit('getInfo', { meetingData: this.state.meetingInfo});
         var minutes = this.state.meetingInfo.length
-
         this.refs.timer.setState({minutesLeft:minutes, meetingTimeLeft: minutes*60, meetingLength: minutes*60})
 
       })
@@ -62,21 +63,25 @@ export default class Room extends Component{
      });
    }
    componentWillMount(){
-     socket.emit('joinRoom', { text: "refresh please" });
    }
    componentDidMount() {
      this.fetch()
-     socket.on('changeMettingStatus', (data)=>{
-       this.setState({buttonText:data.status})
+
+     socket.on('joinRoom', (data)=>{
+       this.fetch()
+     })
+     socket.on('getInfo', (data)=>{
+       this.setState({meetingStatus: data.infoGet})
+     })
+     socket.on('changeMeetingStatus', (data)=>{
+       if (data.meetingStatus.id == this.state.meetingInfo._id)
+        this.setState({meetingStatus:data.meetingStatus})
      })
      socket.on('textChange', (data)=>{
        this.setState({input:data.text.text})
      })
-     socket.on('joinRoom', (data)=>{
-       this.fetch()
-     })
+
      socket.on('individualChange', (data)=>{
-       console.log(data)
        name = data.name
        this.refs[name].setState({individualInput: data.text})
      })
@@ -161,18 +166,19 @@ export default class Room extends Component{
         </div>
         <Timer ref = "timer"/>
         <textarea placeholder="This is where you take public notes" style={input} className=" input btn "type = "text" value = {this.state.input} onChange = {this.inputChange}></textarea>
-        <input ref = "startButton" className = "hvr-grow pointer" type = "button" value = {this.state.buttonText} style = {start} onClick = {()=>{
-          if (this.state.buttonText == 'Start'){
-            this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
-            socket.emit('changeMettingStatus', { status: "Pause" });
+        <input ref = "startButton" className = "hvr-grow pointer" type = "button" value = {this.state.meetingStatus.status} style = {start} onClick = {()=>{
+          if (this.state.meetingStatus.status == 'Start'){
+            // this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
+            socket.emit('changeMeetingStatus', { id: this.state.meetingInfo._id, status: "Pause" });
           }
-          else if (this.state.buttonText == 'Pause'){
-            socket.emit('changeMettingStatus', { status: "Resume" });
-            clearInterval(this.refs.timer.interval)
+          else if (this.state.meetingStatus.status == 'Pause'){
+            socket.emit('changeMeetingStatus', { id: this.state.meetingInfo._id, status: "Resume" });
+            // clearInterval(this.refs.timer.interval)
           }
           else{
-            socket.emit('changeMettingStatus', { status: "Pause" });
-            this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
+            console.log(this.state.meetingInfo._id + 'dog')
+            socket.emit('changeMeetingStatus', { id: this.state.meetingInfo._id, status: "Pause" });
+            // this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
           }
         }}/>
         <Link style={exit} className="clear input btn" onClick = {()=> {
