@@ -28,6 +28,18 @@ io.on('connection', function (socket) {
   socket.on('textChange', function (data) {
     io.emit('textChange', {text: data})
   });
+  socket.on('individualChange', function (data) {
+    io.emit('individualChange', {text: data.text, name: data.name})
+  });
+  socket.on('changeMettingStatus', function (data) {
+    io.emit('changeMettingStatus', {status: data.status})
+  });
+  socket.on('detectTime', function (data) {
+    io.emit('individualChange', {time: data.time})
+  });
+  socket.on('joinRoom', function (data) {
+    io.emit('joinRoom', {refresh: data})
+  });
 });
 server.listen(app.get('port'), function(){
   console.log('server listening on 4000')

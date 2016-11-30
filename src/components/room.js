@@ -18,12 +18,12 @@ export default class Room extends Component{
       currentTime: Date.now(),
       meetingInfo:{participants:[{name:'dog',answer: 'delicious'}]},
       input: '',
+      buttonText: 'Start',
     }
     this.inputChange = this.inputChange.bind(this)
     this.tick = this.tick.bind(this);
   }
   fetch(){
-    console.log(this.props.params.param)
     var _this = this
     return fetch('/meeting/join/' + this.props.params.param, {
       method: 'POST',
@@ -45,7 +45,12 @@ export default class Room extends Component{
       }
     })
     .then((responseJson)=>{
-      this.setState({meetingInfo: responseJson[0]})
+      this.setState({meetingInfo: responseJson[0]}, ()=> {
+        var minutes = this.state.meetingInfo.length
+
+        this.refs.timer.setState({minutesLeft:minutes, meetingTimeLeft: minutes*60, meetingLength: minutes*60})
+
+      })
     })
     .catch((error) => {
       console.error(error);
@@ -56,10 +61,24 @@ export default class Room extends Component{
        currentTime: this.state.dateTimestamp + 1
      });
    }
+   componentWillMount(){
+     socket.emit('joinRoom', { text: "refresh please" });
+   }
    componentDidMount() {
      this.fetch()
+     socket.on('changeMettingStatus', (data)=>{
+       this.setState({buttonText:data.status})
+     })
      socket.on('textChange', (data)=>{
        this.setState({input:data.text.text})
+     })
+     socket.on('joinRoom', (data)=>{
+       this.fetch()
+     })
+     socket.on('individualChange', (data)=>{
+       console.log(data)
+       name = data.name
+       this.refs[name].setState({individualInput: data.text})
      })
      interval = setInterval(this.tick, 1000);
    }
@@ -70,9 +89,10 @@ export default class Room extends Component{
     })
   }
   renderUser(){
+
     return(
       this.state.meetingInfo.participants.map((person, i) => (
-        <User key = {i} name = {person.name} answer = {person.answer}/>
+        <User key = {i} ref = {person.name} name = {person.name} answer = {person.answer}/>
         )
       )
     )
@@ -86,8 +106,21 @@ export default class Room extends Component{
       margin: "auto auto",
       textAlign: "left",
       fontFamimly: "Open Sans",
+      backgroundColor: '#d9d9d9',
       marginTop: "30px",
       marginBottom: "100px"
+    }
+
+    const start = {
+      background: "rgb(70, 70, 70)",
+      color: "white",
+      position: "fixed",
+      right: "20px",
+      top: "20px",
+      border: '0px',
+      width: '100px',
+      height: '40px',
+      fontSize: '15px',
     }
 
     const exit = {
@@ -127,13 +160,25 @@ export default class Room extends Component{
           {this.renderUser()}
         </div>
         <Timer ref = "timer"/>
-        <textarea placeholder="This is where you take notes..." style={input} className=" input btn "type = "text" value = {this.state.input} onChange = {this.inputChange}></textarea>
+        <textarea placeholder="This is where you take public notes" style={input} className=" input btn "type = "text" value = {this.state.input} onChange = {this.inputChange}></textarea>
+        <input ref = "startButton" className = "hvr-grow pointer" type = "button" value = {this.state.buttonText} style = {start} onClick = {()=>{
+          if (this.state.buttonText == 'Start'){
+            this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
+            socket.emit('changeMettingStatus', { status: "Pause" });
+          }
+          else if (this.state.buttonText == 'Pause'){
+            socket.emit('changeMettingStatus', { status: "Resume" });
+            clearInterval(this.refs.timer.interval)
+          }
+          else{
+            socket.emit('changeMettingStatus', { status: "Pause" });
+            this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
+          }
+        }}/>
         <Link style={exit} className="clear input btn" onClick = {()=> {
           clearInterval(interval)
           clearInterval(this.refs.timer.interval)}
         } to = "">Exit</Link>
-        <div className="pointer prev_person"></div>
-        <div className="pointer next_person"></div>
       </div>
     );
   }

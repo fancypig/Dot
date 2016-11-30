@@ -7,7 +7,7 @@
     <script
   src="https://code.jquery.com/jquery-3.1.1.js"
   integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-  crossorigin="anonymous"></script> 
+  crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Catamaran:900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script src="https://use.fontawesome.com/cc46f01b25.js"></script>
@@ -80,7 +80,10 @@
         align-items: center;
         margin: auto auto;
       }
-
+      .user_name_container h3{
+        width: 10vw;
+        word-wrap: break-word;
+      }
       .overtime {
         background: rgb(250, 280, 150)!important;
       }
@@ -3556,8 +3559,8 @@
     </div>
     <script src="bundle.js"></script>
     <script>
-     
-     
+
+
       var userContainer =jQuery('.user_container');
       userContainer.children().first().addClass('animate fadeIn presenting');
       jQuery('.prev_person').click(function() {
@@ -3638,7 +3641,7 @@ function initBannerVideoSize(element){
 
         });
     }
-// Add cursor css 
+// Add cursor css
 var cursorAnim = ".enable-cursor:after {\
   content: '|';\
 }\
@@ -3670,9 +3673,9 @@ var animateTyping = function(element, animatedContent, speed, callback){
   var callback = callback || false;
   var displayStyle = element.style.display; // determines if inline, inline-block, or block;
   element.style.display = 'none';       // hides display to prevent text from showing on load
-  var animatedContent = animatedContent;    // gets the content within the tag to be animated  
+  var animatedContent = animatedContent;    // gets the content within the tag to be animated
   var typeSpeed = speed;
-  var content = "";             // create initial content that will be displayed 
+  var content = "";             // create initial content that will be displayed
   var i = 0;
 
 
@@ -3691,19 +3694,19 @@ var animateTyping = function(element, animatedContent, speed, callback){
       }else{
         styleSheet.insertRule("." + elementClassName + ".enable-cursor::after { animation: blink 1.2s infinite }", 1);
       }
-      
+
       if (callback) {
         return callback();
       }else{
         return
       }
-      
+
     // if the animation is not over...
     } else {
 
       //select the specific tag and paused blinking animation until type-animation is completed
       var elementClassName = element.className.replace(' ', '.');
-      
+
       // create a way to escape special characters
       if (animatedContent[i] == '\\'){
         if(animatedContent[i+1] == '`'){
@@ -3725,7 +3728,7 @@ var animateTyping = function(element, animatedContent, speed, callback){
           content = content + animatedContent[i];
         }
         element.innerHTML = content;
-        i++;  
+        i++;
       }
 
       // reveal the animated content
@@ -3772,7 +3775,7 @@ if (fastTags) {
 var slowTags = document.getElementsByClassName('type-animation-slow');
 if (slowTags) {
   for (var j=0; j<slowTags.length; j++){
-    
+
     slowTags[j].typeAnimation = {
       element: slowTags[j],
       content: slowTags[j].innerHTML,
@@ -3780,7 +3783,7 @@ if (slowTags) {
       animationPlayState: true
     }
     animateTyping(slowTags[j].typeAnimation.element, slowTags[j].typeAnimation.content, 90);
-  } 
+  }
 }
 
 // get an array of elements that have the class 'type-animation-triggered'

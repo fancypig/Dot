@@ -5,7 +5,7 @@ import Modal from 'react-modal'
 import uri from '../../config/auth'
 
 let index = 0
-let questions = ['What is the objective of this meeting?', 'How long is the meeting?', 'What are your questions to participants?']
+let questions = ['What is the objective of this meeting?', 'How long is the meeting? (Minutes)', 'What are your questions to participants?']
 export default class HomePage extends Component{
   constructor(){
     super();
@@ -45,6 +45,7 @@ export default class HomePage extends Component{
 
   }
   createMeeting(){
+
     var _this = this
     return fetch('/meeting/finalize', {
       method: 'POST',
@@ -143,13 +144,33 @@ export default class HomePage extends Component{
     }
     if (index < 2){
       nextButton = <input className="next_button btn hvr-grow pointer" type="button"  value = "Next" onClick = {()=> {
-          index+=1
-          this.setState({currentTitle: questions[index]})
+        if (index == 0){
+          if (this.state.objective == ''){
+            alert('Objective can\'t be empty')
+          }
+          else{
+            index+=1
+            this.setState({currentTitle: questions[index]})
+          }
+        }
+        else{
+          if (this.state.length == ''){
+            alert('Objective can\'t be empty')
+          }
+          else if (isNaN(this.state.length) || this.state.length == 0){
+            alert('Wrong format, please enter a number indicating minutes')
+          }
+          else{
+            index+=1
+            this.setState({currentTitle: questions[index]})
+          }
+        }
+
         }}/>
     }
 
     if (index == 0){
-      inputField = <input placeholder="Write here" className="full_width input" type = "text" value = {this.state.objective} onChange = {this.inputChange}/>
+      inputField = <input placeholder="Write here" required = "true"  className="full_width input" type = "text" value = {this.state.objective} onChange = {this.inputChange}/>
     }
     else if (index == 1){
       inputField = <input placeholder="Write here" className="full_width input" type = "text" value = {this.state.length} onChange = {this.inputChange}/>
@@ -172,7 +193,11 @@ export default class HomePage extends Component{
            {nextButton}
          </div>
        </div>
-       <input className="cancel_button hvr-grow pointer" type="button" onClick = {()=> this.setState({show:false})} value = "Cancel"/>
+       <input className="cancel_button hvr-grow pointer" type="button" onClick = {
+         ()=> {
+           this.setState({show:false})
+         }
+       } value = "Cancel"/>
      </Modal>
     )
   }
