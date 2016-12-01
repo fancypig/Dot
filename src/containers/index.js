@@ -3,7 +3,7 @@ import Home from './home'
 import HomePage from '../components/homePage'
 import Room from '../components/room'
 import Join from '../components/join'
-import {Router, Route,IndexRoute, hashHistory} from "react-router"
+import {Router, Route,IndexRoute, browserHistory} from "react-router"
 
 export default class App extends Component{
   componentDidMount(){
@@ -12,7 +12,7 @@ export default class App extends Component{
   render(){
 
     return(
-      <Router history = {hashHistory}>
+      <Router history = {browserHistory}>
         <Route path = "/" component = {Home}>
           <IndexRoute component = {HomePage}/>
           <Route path= "/meeting_room(/:param)" component = {Room}>

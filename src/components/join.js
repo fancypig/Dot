@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, hashHistory} from "react-router";
+import {Link, browserHistory} from "react-router";
 import moment from 'moment';
 import Modal from 'react-modal'
 import io from 'socket.io-client'
@@ -81,7 +81,7 @@ export default class Join extends Component{
        }
      })
      .then((responseJson)=>{
-       hashHistory.push('/meeting_room/'+this.state.meetingInfo._id);
+       browserHistory.push('/meeting_room/'+this.state.meetingInfo._id);
        socket.emit('newMember', {memberInfo: {id: this.state.meetingInfo._id, name:this.state.name, answer: this.state.answer}})
        console.log(responseJson)
      })
