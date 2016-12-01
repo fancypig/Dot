@@ -13,41 +13,41 @@ export default class Timer extends Component{
 				meetingLength: 90,
   	 	}
 
-  	 	this.countdown = this.countdown.bind(this)
-  	 	this.delay = this.delay.bind(this)
+			//  	this.countdown = this.countdown.bind(this)
+			//  	this.delay = this.delay.bind(this)
  	}
 
- 	countdown() {
-		if (this.state.meetingTimeLeft > 0){
-			this.setState({meetingTimeLeft: this.state.meetingTimeLeft-1})
-		}
-		if (this.state.secondsLeft > 0){
-			this.setState({
-				secondsLeft: this.state.secondsLeft - 1
-			})
-		}
-		else{
-			if (this.state.minutesLeft > 0){
-				this.setState({
-					minutesLeft: this.state.minutesLeft - 1,
-					secondsLeft: 59
-				})
-			}
-			else{
-				alert('Time Up!')
-				clearInterval(this.interval)
-				this.setState({
-					overtime: true
-				})
-			}
-		}
- 	}
-
- 	delay() {
- 		this.setState({
- 			meetingTimeLeft: this.state.meetingTimeLeft + 120
- 		})
- 	}
+ // 	countdown() {
+	// 	if (this.state.meetingTimeLeft > 0){
+	// 		this.setState({meetingTimeLeft: this.state.meetingTimeLeft-1})
+	// 	}
+	// 	if (this.state.secondsLeft > 0){
+	// 		this.setState({
+	// 			secondsLeft: this.state.secondsLeft - 1
+	// 		})
+	// 	}
+	// 	else{
+	// 		if (this.state.minutesLeft > 0){
+	// 			this.setState({
+	// 				minutesLeft: this.state.minutesLeft - 1,
+	// 				secondsLeft: 59
+	// 			})
+	// 		}
+	// 		else{
+	// 			alert('Time Up!')
+	// 			clearInterval(this.interval)
+	// 			this.setState({
+	// 				overtime: true
+	// 			})
+	// 		}
+	// 	}
+ // 	}
+	//
+ // 	delay() {
+ // 		this.setState({
+ // 			meetingTimeLeft: this.state.meetingTimeLeft + 120
+ // 		})
+ // 	}
 
  	componentDidMount() {
  		this.interval;

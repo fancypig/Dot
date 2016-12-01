@@ -12,11 +12,15 @@ var server = require('http').Server(app)
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser')
 
-var meetings = [{
-  id: 0,
-  timeLeft: 0,
-  status: 'Start'
-}]
+var interval = {};
+var meetings = {
+  '0':{
+    minutesLeft: 0,
+    secondsLeft: 0,
+    meetingTimeLeft: 0,
+    status: 'Start'
+  }
+};
 
 app.use(bodyParser.json());
 
@@ -31,49 +35,51 @@ app.use('/meeting',require('./server/meeting'));
 // app.get('/auth/facebook/callback',
 //   passport.authenticate('facebook', { successRedirect: '/',
 //                                       failureRedirect: '/cat' }));
-io.on('connection', function (socket) {
+function timeChange(meeting, cb){
+  if (meeting.meetingTimeLeft > 0){
+    meeting.meetingTimeLeft -= 1
+  }
+  else{
+    console.log('Timeup!')
+  }
 
-  // socket.on('getInfo', function (data) {
-  //   var exist = false
-  //   var infoGet = {}
-  //   for (var i = 0; i< meetings.length; i++){
-  //     if (meetings[i].id == data.meetingData._id)
-  //       exist = true
-  //       infoGet = meetings[i]
-  //   }
-  //   if (!exist){
-  //     infoGet = {
-  //       id: data.meetingData._id,
-  //       meetingTimeLeft: data.meetingData.length,
-  //       status: 'Start',
-  //     }
-  //     meetings.push(infoGet)
-  //   }
-  //   io.emit('getInfo',{infoGet: infoGet})
-  // });
+  cb(meeting)
+}
+io.on('connection', function (socket) {
   socket.on('individualChange', function (data) {
-    console.log(data)
     io.to(data.id).emit('individualChange', {input: data.input, name: data.name})
   });
+
   socket.on('changeMeetingStatus', function (data) {
-    // returnValue = {}
-    // for (var i = 0; i< meetings.length; i++){
-    //   if (meetings[i].id == data.id){
-    //     meetings[i].status = data.status
-    //     returnValue = meetings[i]
-    //   }
-    // }
-    io.to(data.id).emit('changeMeetingStatus', {meetingStatus: data.status})
+    meetings[data.id].status = data.status
+    if (data.status == 'Pause'){
+      interval[data.id] = setInterval(timeChange.bind(null, meetings[data.id],function(meeting){
+        io.to(data.id).emit('timeChange', {meetingInfo: meeting})
+      }), 1000)
+    }
+    else{
+      clearInterval(interval[data.id])
+    }
+    io.to(data.id).emit('changeMeetingStatus', {meetingInfo: meetings[data.id]})
   });
+
   socket.on('textChange', function (data) {
     io.to(data.id).emit('textChange', {text: data.text})
   });
-  // socket.on('detectTime', function (data) {
-  //   io.emit('individualChange', {time: data.time})
-  // });
+
+  socket.on('newMember', function (data) {
+    if (meetings[data.memberInfo.id]){
+      meetings[data.memberInfo.id]['participants'].push({name: data.memberInfo.name, answer: data.memberInfo.answer})
+    }
+  });
+
   socket.on('joinRoom', function (data) {
-    socket.join(data.meetingID)
-    io.to(data.meetingID).emit('joinRoom')
+    socket.join(data.meetingInfo._id)
+    if (!meetings[data.meetingInfo._id]){
+      meetings[data.meetingInfo._id] = data.meetingInfo
+    }
+    console.log(meetings[data.meetingInfo._id]['participants'].length)
+    io.to(data.meetingInfo._id).emit('joinRoom', {meetingInfo: meetings[data.meetingInfo._id]})
   });
 });
 server.listen(app.get('port'), function(){

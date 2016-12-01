@@ -16,15 +16,13 @@ export default class Room extends Component{
     super()
     this.state = {
       currentTime: Date.now(),
-      meetingInfo:{participants:[{name:'dog',answer: 'delicious'}]},
+      meetingInfo:{status:'Start', participants:[{name:'dog',answer: 'delicious'}]},
       input: '',
-      buttonText: 'Start',
       meetingStatus: {id:0, length:0, status:'Start'}, //Object
     }
     this.inputChange = this.inputChange.bind(this)
     this.individualInputChange = this.individualInputChange.bind(this)
     this.tick = this.tick.bind(this);
-    this.refresh = this.refresh.bind(this)
   }
   fetch(){
     var _this = this
@@ -48,44 +46,18 @@ export default class Room extends Component{
       }
     })
     .then((responseJson)=>{
-      this.setState({meetingInfo: responseJson[0]}, ()=> {
-        socket.emit('joinRoom', {meetingID: this.state.meetingInfo._id})
-        console.log(this.state.meetingInfo)
+      var minutes = responseJson[0].length
+      var meetingTimeLeft = minutes*60
+      var tmp = Object.assign({}, responseJson[0])
+      tmp.minutes = minutes
+      tmp.meetingTimeLeft = meetingTimeLeft
+      tmp.status = 'Start'
+      this.setState({meetingInfo: tmp}, ()=> {
+        console.log(this.state.meetingInfo.participants.length)
+        socket.emit('joinRoom', {meetingInfo: this.state.meetingInfo})
         // socket.emit('getInfo', { meetingData: this.state.meetingInfo});
-        var minutes = this.state.meetingInfo.length
-        this.refs.timer.setState({minutesLeft:minutes, meetingTimeLeft: minutes*60, meetingLength: minutes*60})
+        // this.refs.timer.setState({minutesLeft:minutes, meetingTimeLeft: meetingTimeLeft, meetingLength: minutes*60})
 
-      })
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
-  refresh(){
-    var _this = this
-    return fetch('/meeting/join/' + this.props.params.param, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        purpose: 'room',
-      })
-    })
-    .then((response) => {
-      if (response.status != 200){
-        console.log('errors')
-        return
-      }
-      else{
-        return response.json();
-      }
-    })
-    .then((responseJson)=>{
-      this.setState({meetingInfo: responseJson[0]}, ()=> {
-        var minutes = this.state.meetingInfo.length
-        this.refs.timer.setState({minutesLeft:minutes, meetingTimeLeft: minutes*60, meetingLength: minutes*60})
       })
     })
     .catch((error) => {
@@ -102,27 +74,29 @@ export default class Room extends Component{
    componentDidMount() {
      this.fetch()
 
-     socket.on('joinRoom', ()=>{
-      //  socket.emit('provideInfo', {id: this.state.meetingInfo._id, minutesLeft: this.refs.timer.state.minutesLeft, secondsLeft: this.refs.timer.state.secondsLeft, :})
-       this.refresh()
+     socket.on('joinRoom', (data)=>{
+       console.log(data.meetingInfo)
+       var minutesLeft = parseInt(data.meetingInfo.meetingTimeLeft/60)
+       var secondsLeft = data.meetingInfo.meetingTimeLeft%60
+       this.setState({meetingInfo: data.meetingInfo})
+       this.refs.timer.setState({minutesLeft:minutesLeft, secondsLeft: secondsLeft, meetingTimeLeft: data.meetingInfo.meetingTimeLeft, meetingLength: data.meetingInfo.minutes*60})
      })
-    //  socket.on('getInfo', (data)=>{
-    //    this.setState({meetingStatus: data.infoGet})
-    //  })
+
      socket.on('changeMeetingStatus', (data)=>{
-      var tmp =  Object.assign({}, this.state.meetingStatus)
-      tmp.status = data.meetingStatus
-      if (tmp.status == 'Pause'){
-        this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
-      }
-      else{
-        clearInterval(this.refs.timer.interval)
-      }
-      this.setState({meetingStatus:tmp})
+      this.setState({meetingInfo: data.meetingInfo})
      })
+
      socket.on('textChange', (data)=>{
        this.setState({input:data.text})
      })
+
+     socket.on('timeChange', (data)=>{
+       var minutesLeft = parseInt(data.meetingInfo.meetingTimeLeft/60)
+       var secondsLeft = data.meetingInfo.meetingTimeLeft%60
+       this.setState({meetingInfo:data.meetingInfo})
+       this.refs.timer.setState({minutesLeft:minutesLeft, secondsLeft: secondsLeft, meetingTimeLeft: data.meetingInfo.meetingTimeLeft, meetingLength: data.meetingInfo.minutes*60})
+     })
+
      socket.on('individualChange', (data)=>{
        name = data.name
        this.refs[name].setState({individualInput: data.input})
@@ -167,19 +141,11 @@ export default class Room extends Component{
       color: "white",
       position: "fixed",
       right: "20px",
-      top: "20px",
+      bottom: "20px",
       border: '0px',
       width: '100px',
       height: '40px',
       fontSize: '15px',
-    }
-
-    const exit = {
-      background: "rgb(70, 70, 70)",
-      color: "white",
-      position: "fixed",
-      right: "0",
-      bottom: "0"
     }
 
     const main_container = {
@@ -202,8 +168,7 @@ export default class Room extends Component{
       lineHeight: "50px",
       fontFamily: "Catamaran"
     }
-
-// Loop over all existing users
+    // Loop over all existing users
     return(
       <div style={main_container}>
         <h1 style={purpose} className="purpose"><strong>Purpose of Meeting:</strong> { this.state.meetingInfo.objective }</h1>
@@ -212,25 +177,21 @@ export default class Room extends Component{
         </div>
         <Timer ref = "timer"/>
         <textarea placeholder="This is where you take public notes" style={input} className=" input btn "type = "text" value = {this.state.input} onChange = {this.inputChange}></textarea>
-        <input ref = "startButton" className = "hvr-grow pointer" type = "button" value = {this.state.meetingStatus.status} style = {start} onClick = {()=>{
-          if (this.state.meetingStatus.status == 'Start'){
+        <input ref = "startButton" className = "hvr-grow pointer" type = "button" value = {this.state.meetingInfo.status} style = {start} onClick = {()=>{
+          if (this.state.meetingInfo.status == 'Start'){
             // this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
             socket.emit('changeMeetingStatus', { id: this.state.meetingInfo._id, status: "Pause" });
           }
-          else if (this.state.meetingStatus.status == 'Pause'){
+          else if (this.state.meetingInfo.status == 'Pause'){
             socket.emit('changeMeetingStatus', { id: this.state.meetingInfo._id, status: "Resume" });
             // clearInterval(this.refs.timer.interval)
           }
           else{
-            console.log(this.state.meetingInfo._id + 'dog')
             socket.emit('changeMeetingStatus', { id: this.state.meetingInfo._id, status: "Pause" });
             // this.refs.timer.interval = setInterval(this.refs.timer.countdown,1000)
           }
         }}/>
-        <Link style={exit} className="clear input btn" onClick = {()=> {
-          clearInterval(interval)
-          clearInterval(this.refs.timer.interval)}
-        } to = "">Exit</Link>
+
       </div>
     );
   }
