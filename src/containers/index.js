@@ -17,7 +17,7 @@ export default class App extends Component{
           <IndexRoute component = {HomePage}/>
           <Route path= "/meeting_room(/:param)" component = {Room}>
           </Route>
-          <Route path= "/join(/:param)" component = {Join}>
+          <Route path= "/join/:param" component = {Join}>
           </Route>
         </Route>
       </Router>

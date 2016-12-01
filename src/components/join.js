@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Link} from "react-router";
+import {Link, hashHistory} from "react-router";
 import moment from 'moment';
 import Modal from 'react-modal'
-
 import io from 'socket.io-client'
 
 // random jquery stuff here...
@@ -21,7 +20,7 @@ export default class Join extends Component{
       },
       show: true,
       showPrep: false,
-      answer: String,
+      answer: '',
       name: '',
       }
   }
@@ -82,7 +81,7 @@ export default class Join extends Component{
        }
      })
      .then((responseJson)=>{
-       this.props.history.push('/meeting_room/'+this.state.meetingInfo._id);
+       hashHistory.push('/meeting_room/'+this.state.meetingInfo._id);
        socket.emit('newMember', {memberInfo: {id: this.state.meetingInfo._id, name:this.state.name, answer: this.state.answer}})
        console.log(responseJson)
      })
@@ -98,7 +97,12 @@ export default class Join extends Component{
         <h2 className="modal_your_name">What is your name</h2>
         <input className="input" type="text" defaultValue = '' onChange = {(text)=>this.setState({name: text.target.value})}/>
         <input className="btn" type = "button" value = "Next" onClick = {()=>{
-          this.setState({show: false}, ()=>{this.setState({showPrep: true})})
+          if (this.state.name == ''){
+            alert('Please enter your name!')
+          }
+          else{
+            this.setState({show: false}, ()=>{this.setState({showPrep: true})})
+          }
         }}/>
       </Modal>
      )
@@ -112,7 +116,12 @@ export default class Join extends Component{
         <input className="input" type="text" defaultValue = ''  onChange = {(text)=>{
           this.setState({answer: text.target.value})}}/>
         <input className="btn" type = "button" value = "Enter" onClick = {()=>{
-           this.joinRoom()
+          if (this.state.answer == ''){
+            alert('Please enter your preparation!')
+          }
+          else{
+            this.joinRoom()
+          }
          }}/>
       </Modal>
      )
