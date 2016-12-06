@@ -1,7 +1,3 @@
-const webpack = require('webpack')
-const webpackDevMiddleware = require('webpack-dev-middleware')
-const webpackConfig = require('./webpack.config.js')
-
 var passport = require('passport')
 var path = require('path');
 var express = require('express')
@@ -26,7 +22,12 @@ app.use(bodyParser.json());
 
 // require('./config/passport')
 app.use(express.static(__dirname + '/public'))
-app.use(webpackDevMiddleware(webpack(webpackConfig)))
+if (process.ENV.NODE_ENV !== 'production'){
+  const webpack = require('webpack')
+  const webpackDevMiddleware = require('webpack-dev-middleware')
+  const webpackConfig = require('./webpack.config.js')
+  app.use(webpackDevMiddleware(webpack(webpackConfig)))
+}
 mongoose.connect(config.mongo.uri)
 app.set('port', process.env.PORT || 4000);
 app.set('host', process.env.HOST || 'localhost');
