@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // require('./config/passport')
 app.use(express.static(__dirname + '/public'))
-if (process.ENV.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production'){
   const webpack = require('webpack')
   const webpackDevMiddleware = require('webpack-dev-middleware')
   const webpackConfig = require('./webpack.config.js')
