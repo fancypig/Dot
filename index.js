@@ -48,6 +48,18 @@ function timeChange(meeting, cb){
 
   cb(meeting)
 }
+
+//when passing function as a parameter, bind it otherwise you would be invoking it right there
+function test(){
+  console.log('test')
+}
+function tryout(){
+  test()
+  test()
+}
+testTmp = test.bind(this)
+tryout(test())
+
 io.on('connection', function (socket) {
   socket.on('individualChange', function (data) {
     io.to(data.id).emit('individualChange', {input: data.input, name: data.name})

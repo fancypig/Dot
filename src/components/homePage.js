@@ -41,8 +41,13 @@ export default class HomePage extends Component{
      </Modal>
     )
   }
+  //test default param
+  test(a,b){
+    var tmp = b ||5
+    console.log(a + tmp)
+  }
   componentDidMount(){
-
+    this.test(5)
   }
   createMeeting(){
 
