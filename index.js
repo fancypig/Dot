@@ -39,11 +39,12 @@ app.get('*', function(req, res){
 // app.get('/auth/facebook/callback',
 //   passport.authenticate('facebook', { successRedirect: '/',
 //                                       failureRedirect: '/cat' }));
-function timeChange(meeting, cb){
+function timeChange(meeting, id, cb){
   if (meeting.meetingTimeLeft > 0){
     meeting.meetingTimeLeft -= 1
   }
   else{
+    clearInterval(interval[id])
     console.log('Timeup!')
   }
 
@@ -68,8 +69,9 @@ io.on('connection', function (socket) {
 
   socket.on('changeMeetingStatus', function (data) {
     meetings[data.id].status = data.status
+    console.log(data.status)
     if (data.status == 'Pause'){
-      interval[data.id] = setInterval(timeChange.bind(null, meetings[data.id],function(meeting){
+      interval[data.id] = setInterval(timeChange.bind(null, meetings[data.id], data.id, function(meeting){
         io.to(data.id).emit('timeChange', {meetingInfo: meeting})
       }), 1000)
     }
