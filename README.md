@@ -6,3 +6,4 @@
 </ul>
   <h1>Technology involved:</h1>
   <p>React.js, Node.js Socket.io, MongoDB</p>
+ ![Alt text](/part1.gif)
