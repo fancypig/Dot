@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux'
 import {selectUser} from '../actions/index'
 
-
 class Home extends Component{
 
   render(){

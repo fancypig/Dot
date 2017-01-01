@@ -213,7 +213,7 @@ export default class HomePage extends Component{
     return(
       <div style={main_content} className="main_content">
         <div style={front_page} className="front_page">
-          <h1 style={tagline} className="type-animation enable-cursor">Perfect Meetings@ Everytime.</h1>
+          <h1 style={tagline} className="type-animation enable-cursor">Perfect Meetings Everytime.</h1>
           <div style={button_container} className="button_container">
             {this.renderModal()}
             {this.renderModalResult()}

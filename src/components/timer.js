@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link} from "react-router";
-
 // user inputs the duration of the meeting
 export default class Timer extends Component{
 	constructor(){

@@ -8,7 +8,6 @@ import io from 'socket.io-client'
 
 // random jquery stuff here...
 
-
 let socket = io()
 var interval
 export default class Room extends Component{
@@ -18,6 +17,7 @@ export default class Room extends Component{
       currentTime: Date.now(),
       meetingInfo:{status:'Start', participants:[{name:'dog',answer: 'delicious'}]},
       input: '',
+      end: false,
       meetingStatus: {id:0, length:0, status:'Start'}, //Object
     }
     this.inputChange = this.inputChange.bind(this)
@@ -53,7 +53,6 @@ export default class Room extends Component{
       tmp.meetingTimeLeft = meetingTimeLeft
       tmp.status = 'Start'
       this.setState({meetingInfo: tmp}, ()=> {
-        console.log(this.state.meetingInfo.participants.length)
         socket.emit('joinRoom', {meetingInfo: this.state.meetingInfo})
         // socket.emit('getInfo', { meetingData: this.state.meetingInfo});
         // this.refs.timer.setState({minutesLeft:minutes, meetingTimeLeft: meetingTimeLeft, meetingLength: minutes*60})
@@ -75,7 +74,6 @@ export default class Room extends Component{
      this.fetch()
 
      socket.on('joinRoom', (data)=>{
-       console.log(data.meetingInfo)
        var minutesLeft = parseInt(data.meetingInfo.meetingTimeLeft/60)
        var secondsLeft = data.meetingInfo.meetingTimeLeft%60
        this.setState({meetingInfo: data.meetingInfo})
@@ -93,6 +91,11 @@ export default class Room extends Component{
      socket.on('timeChange', (data)=>{
        var minutesLeft = parseInt(data.meetingInfo.meetingTimeLeft/60)
        var secondsLeft = data.meetingInfo.meetingTimeLeft%60
+       if (minutesLeft == 0 && secondsLeft == 0 && !this.state.end){
+         
+         this.setState({end: true})
+         alert('Time Up!')
+       }
        this.setState({meetingInfo:data.meetingInfo})
        this.refs.timer.setState({minutesLeft:minutesLeft, secondsLeft: secondsLeft, meetingTimeLeft: data.meetingInfo.meetingTimeLeft, meetingLength: data.meetingInfo.minutes*60})
      })
