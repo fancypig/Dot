@@ -1,5 +1,15 @@
 var Meeting = require('./meeting.model');
 var bodyParser = require('body-parser');
+var nodemailer = require("nodemailer");
+var smtpTransport = require('nodemailer-smtp-transport');
+var options = {
+    service: 'gmail',
+    auth: {
+        user: 'percytsy@gmail.com',
+        pass: process.env.GMAILPASS
+    }
+  };
+var transporter = nodemailer.createTransport(smtpTransport(options));
 var self = module.exports = {
   finalizeMeeting: function(req,res){
     var newMeeting = {
@@ -17,6 +27,24 @@ var self = module.exports = {
       }
     })
 
+  },
+  sendEmail: function(req, res){
+    var content = ''
+    var mailOptions={
+      from: 'percytsy@gmail.com',
+        to : 'percytsy@gmail.com',
+        subject : 'Meeting result',
+        text : JSON.stringify(req.body.meetingInfo)
+    }
+    transporter.sendMail(mailOptions, function(error, response){
+     if(error){
+          console.log('error ' + error);
+        res.status(400).json("error");
+     }
+     else{
+          res.status(200);
+    }
+    })
   },
   joinMeeting: function(req,res){
     console.log(req.params)

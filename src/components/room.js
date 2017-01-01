@@ -63,6 +63,34 @@ export default class Room extends Component{
       console.error(error);
     });
   }
+  sendEmail(result){
+    console.log(result)
+    var _this = this
+    return fetch('/meeting/sendEmail', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        purpose: 'sendEmail',
+        meetingInfo: result,
+      })
+    })
+    .then((response) => {
+      if (response.status != 200){
+        console.log('errors')
+        return
+      }
+      else{
+        alert('Time is up! An email containing the meeting information has been sent')
+        console.log(response.json)
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
   tick() {
      this.setState({
        currentTime: this.state.dateTimestamp + 1
@@ -72,7 +100,6 @@ export default class Room extends Component{
    }
    componentDidMount() {
      this.fetch()
-
      socket.on('joinRoom', (data)=>{
        var minutesLeft = parseInt(data.meetingInfo.meetingTimeLeft/60)
        var secondsLeft = data.meetingInfo.meetingTimeLeft%60
@@ -87,14 +114,18 @@ export default class Room extends Component{
      socket.on('textChange', (data)=>{
        this.setState({input:data.text})
      })
-
+     var _this = this
      socket.on('timeChange', (data)=>{
        var minutesLeft = parseInt(data.meetingInfo.meetingTimeLeft/60)
        var secondsLeft = data.meetingInfo.meetingTimeLeft%60
        if (minutesLeft == 0 && secondsLeft == 0 && !this.state.end){
-         
+         var result = {}
+         this.state.meetingInfo.participants.map((person, i) => {
+           result[person.name] = this.refs[person.name].state.individualInput
+         })
+         result.sharedNotes = this.state.input
          this.setState({end: true})
-         alert('Time Up!')
+         this.sendEmail(result)
        }
        this.setState({meetingInfo:data.meetingInfo})
        this.refs.timer.setState({minutesLeft:minutesLeft, secondsLeft: secondsLeft, meetingTimeLeft: data.meetingInfo.meetingTimeLeft, meetingLength: data.meetingInfo.minutes*60})

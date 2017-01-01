@@ -6,4 +6,5 @@ var router = express.Router();
 router.post('/finalize', controller.finalizeMeeting);
 router.post('/join/:id', controller.joinMeeting);
 router.post('/room/:id', controller.joinRoom)
+router.post('/sendEmail', controller.sendEmail)
 module.exports = router;
