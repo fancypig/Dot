@@ -56,7 +56,7 @@ function timeChange(meeting, id, cb){
 
 io.on('connection', function (socket) {
   socket.on('individualChange', function (data) {
-    io.to(data.id).emit('individualChange', {input: data.input, name: data.name})
+    socket.to(data.id).broadcast.emit('individualChange', {input: data.input, name: data.name})
   });
 
   socket.on('changeMeetingStatus', function (data) {
@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('textChange', function (data) {
-    io.to(data.id).emit('textChange', {text: data.text})
+    socket.to(data.id).broadcast.emit('textChange', {text: data.text})
   });
 
   socket.on('newMember', function (data) {
