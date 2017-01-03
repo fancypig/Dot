@@ -29,6 +29,7 @@ var self = module.exports = {
 
   },
   sendEmail: function(req, res){
+    console.log(req.body.meetingInfo)
     var content = ''
     var mailOptions={
       from: 'percytsy@gmail.com',
@@ -38,11 +39,10 @@ var self = module.exports = {
     }
     transporter.sendMail(mailOptions, function(error, response){
      if(error){
-          console.log('error ' + error);
         res.status(400).json("error");
      }
      else{
-          res.status(200);
+          res.status(200).json('done');
     }
     })
   },

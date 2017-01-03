@@ -15,7 +15,7 @@ export default class Room extends Component{
     super()
     this.state = {
       currentTime: Date.now(),
-      meetingInfo:{status:'Start', participants:[{name:'dog',answer: 'delicious'}]},
+      meetingInfo:{status:'Start', participants:[{name:'',answer: ''}]},
       input: '',
       end: false,
       meetingStatus: {id:0, length:0, status:'Start'}, //Object
@@ -78,6 +78,7 @@ export default class Room extends Component{
       })
     })
     .then((response) => {
+      console.log(response)
       if (response.status != 200){
         console.log('errors')
         return
