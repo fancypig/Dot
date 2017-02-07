@@ -21,7 +21,7 @@ var meetings = {
 app.use(bodyParser.json());
 
 // require('./config/passport')
-app.use(express.static(__dirname + '/public'))
+app.use(express.static('public'))
 if (process.env.NODE_ENV !== 'production'){
   const webpack = require('webpack')
   const webpackDevMiddleware = require('webpack-dev-middleware')
