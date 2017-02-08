@@ -53,7 +53,6 @@ function timeChange(meeting, id, cb){
 }
 
 //when passing function as a parameter, bind it otherwise you would be invoking it right there
-
 io.on('connection', function (socket) {
   socket.on('individualChange', function (data) {
     socket.to(data.id).broadcast.emit('individualChange', {input: data.input, name: data.name})
