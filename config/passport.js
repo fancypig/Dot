@@ -2,6 +2,7 @@ var configAuth = require('./auth')
 var passport = require('passport')
 var FacebookStrategy = require('passport-facebook').Strategy;
 
+
 module.exports = function(passport) {
   passport.serializeUser(function(user, done){
   		done(null, user.id);
